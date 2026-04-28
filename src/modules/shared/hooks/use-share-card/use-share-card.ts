@@ -70,6 +70,21 @@ export const useShareCard = (filename: string): UseShareCard => {
           await document.fonts.ready
         }
 
+        // Wait for every <img> inside the card to fully decode — otherwise
+        // html-to-image may serialize a not-yet-loaded image and the capture
+        // ends up blank/black.
+        const images = Array.from(node.querySelectorAll('img'))
+        await Promise.all(
+          images.map((img) =>
+            img.complete && img.naturalWidth > 0
+              ? img.decode().catch(() => undefined)
+              : new Promise<void>((resolve) => {
+                  img.addEventListener('load', () => resolve(), { once: true })
+                  img.addEventListener('error', () => resolve(), { once: true })
+                }),
+          ),
+        )
+
         // Temporarily apply the resolved font-family to the card node so the
         // clone carries it directly (CSS variables set on <html> don't always
         // survive html-to-image's cloning on every browser).
@@ -82,8 +97,17 @@ export const useShareCard = (filename: string): UseShareCard => {
 
         const blob = await toBlob(node, {
           pixelRatio: 2,
-          cacheBust: true,
           backgroundColor: '#0d0a08',
+          // Override positioning on the cloned root so it renders at 0,0
+          // inside the SVG foreignObject regardless of how the original is
+          // hidden in the page.
+          style: {
+            position: 'static',
+            top: '0',
+            left: '0',
+            zIndex: 'auto',
+            pointerEvents: 'auto',
+          },
         })
 
         // Restore styles

@@ -18,7 +18,8 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
       : {
           position: 'fixed',
           top: 0,
-          left: -99999,
+          left: 0,
+          zIndex: -1,
           pointerEvents: 'none',
         }
 
@@ -38,7 +39,6 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
           justifyContent: 'space-between',
           padding: '96px 88px',
           fontFamily: 'var(--font-fraunces), ui-serif, serif',
-          contain: 'layout paint',
         }}
       >
         {children}
