@@ -2,9 +2,8 @@
 
 import Link from 'next/link'
 
-import { LANGUAGE_QUERY_PARAM } from '@/modules/languages/languages.constants'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
-import { useLanguageContext } from '@/modules/languages/stores/language-store'
 import { type TranslationKey } from '@/translations/translation.types'
 
 import { ARROWS } from '../../enneatypes.constants'
@@ -60,7 +59,7 @@ const ArrowRow = ({
 
 export const ArrowsSection = ({ type }: ArrowsSectionProps) => {
   const t = useTranslate()
-  const { language } = useLanguageContext()
+  const localeHref = useLocaleHref()
   const { growth, stress } = ARROWS[type]
 
   const growthName = t(`enneatype.${growth}.name` as TranslationKey)
@@ -69,7 +68,7 @@ export const ArrowsSection = ({ type }: ArrowsSectionProps) => {
   const stressDescription = t(`enneatype.${type}.stress` as TranslationKey)
 
   const linkFor = (target: EnneatypeId) =>
-    `/enneagram/types/${target}?${LANGUAGE_QUERY_PARAM}=${language}`
+    localeHref(`/enneagram/types/${target}`)
 
   return (
     <section className='mt-10 border-t border-oxide-900 pt-8'>

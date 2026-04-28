@@ -3,9 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { LANGUAGE_QUERY_PARAM } from '@/modules/languages/languages.constants'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
-import { useLanguageContext } from '@/modules/languages/stores/language-store'
 import { ResultSection } from '@/modules/shared/components/ResultSection'
 import { type TranslationKey } from '@/translations/translation.types'
 
@@ -20,7 +19,7 @@ type TypeDetailViewProps = {
 
 export const TypeDetailView = ({ type }: TypeDetailViewProps) => {
   const t = useTranslate()
-  const { language } = useLanguageContext()
+  const localeHref = useLocaleHref()
 
   const name = t(`enneatype.${type}.name` as TranslationKey)
   const subtitle = t(`enneatype.${type}.subtitle` as TranslationKey)
@@ -106,7 +105,7 @@ export const TypeDetailView = ({ type }: TypeDetailViewProps) => {
             {ENNEATYPE_IDS.map((other) => (
               <li key={other}>
                 <Link
-                  href={`/enneagram/compatibility/${compatPairSlug(type, other)}?${LANGUAGE_QUERY_PARAM}=${language}`}
+                  href={localeHref(`/enneagram/compatibility/${compatPairSlug(type, other)}`)}
                   className='inline-flex items-center rounded-[2px] border border-oxide-900 px-4 py-1.5 font-display text-base font-light tracking-[-0.02em] text-gold-400 transition-all duration-150 ease-out hover:border-gold-500 hover:bg-gold-500/5 hover:text-gold-300 focus-visible:border-gold-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900'
                 >
                   {other}
@@ -118,7 +117,7 @@ export const TypeDetailView = ({ type }: TypeDetailViewProps) => {
 
         <div className='mt-10 flex flex-col gap-3'>
           <Link
-            href='/enneagram'
+            href={localeHref('/enneagram')}
             className='w-full cursor-pointer rounded-[2px] border border-oxide-800 bg-transparent px-6 py-4 text-center font-display text-[15px] tracking-[0.05em] text-gold-500
                        transition-all duration-200 ease-out
                        hover:border-gold-500 hover:bg-gold-500/5 active:scale-[0.985]
@@ -128,7 +127,7 @@ export const TypeDetailView = ({ type }: TypeDetailViewProps) => {
           </Link>
 
           <Link
-            href='/enneagram/types'
+            href={localeHref('/enneagram/types')}
             className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                        transition-colors duration-200 ease-out
                        hover:text-cream-200
@@ -138,7 +137,7 @@ export const TypeDetailView = ({ type }: TypeDetailViewProps) => {
           </Link>
 
           <Link
-            href='/'
+            href={localeHref('/')}
             className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-700
                        transition-colors duration-200 ease-out
                        hover:text-cream-200

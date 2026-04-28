@@ -3,11 +3,13 @@
 import Link from 'next/link'
 
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 
 import { HubCard } from '../../components/HubCard'
 
 export const HomeView = () => {
   const t = useTranslate()
+  const localeHref = useLocaleHref()
 
   return (
     <main className='mx-auto max-w-xl px-5 pt-10 pb-10'>
@@ -26,7 +28,7 @@ export const HomeView = () => {
 
         <div className='mt-10 flex flex-col gap-5'>
           <HubCard
-            href='/enneagram'
+            href={localeHref('/enneagram')}
             eyebrowKey='hub.card.enneagram.eyebrow'
             titleKey='hub.card.enneagram.title'
             subtitleKey='hub.card.enneagram.subtitle'
@@ -35,7 +37,7 @@ export const HomeView = () => {
             ariaLabelKey='hub.card.enneagram.aria-label'
           />
           <HubCard
-            href='/mbti'
+            href={localeHref('/mbti')}
             eyebrowKey='hub.card.mbti.eyebrow'
             titleKey='hub.card.mbti.title'
             subtitleKey='hub.card.mbti.subtitle'
@@ -54,14 +56,14 @@ export const HomeView = () => {
           </p>
           <p className='text-[13px] leading-[1.6] text-warm-gray-300'>
             <Link
-              href='/enneagram/types'
+              href={localeHref('/enneagram/types')}
               className='text-gold-500 underline-offset-4 transition-colors duration-250 hover:text-gold-400 hover:underline focus-visible:outline-none focus-visible:underline'
             >
               {t('hub.wiki.enneagram')}
             </Link>
             <span className='mx-2 text-warm-gray-700' aria-hidden='true'>·</span>
             <Link
-              href='/mbti/types'
+              href={localeHref('/mbti/types')}
               className='text-gold-500 underline-offset-4 transition-colors duration-250 hover:text-gold-400 hover:underline focus-visible:outline-none focus-visible:underline'
             >
               {t('hub.wiki.mbti')}

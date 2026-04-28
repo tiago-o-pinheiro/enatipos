@@ -1,13 +1,15 @@
 'use client'
 
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 import { type TranslationKey } from '@/translations/translation.types'
 
 import { useTranslate } from '../../hooks/use-translate'
 import { LANGUAGES } from '../../languages.constants'
-import { type Language } from '../../languages.types'
 import { useLanguageContext } from '../../stores/language-store'
+import { withLocale } from '../../utils/locale-path'
 
 const TOGGLE_CLASSES =
   'flex cursor-pointer items-center gap-2 rounded-[2px] border border-oxide-800 bg-ink-800/60 px-3 py-2 font-display text-xs font-medium uppercase tracking-[0.15em] text-gold-500 backdrop-blur-sm ' +
@@ -27,7 +29,8 @@ const ITEM_IDLE_CLASSES =
 
 export const LanguageSwitcher = () => {
   const t = useTranslate()
-  const { language, setLanguage } = useLanguageContext()
+  const { language } = useLanguageContext()
+  const pathname = usePathname() ?? '/'
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
@@ -62,12 +65,6 @@ export const LanguageSwitcher = () => {
 
   const handleToggle = () => setOpen((prev) => !prev)
 
-  const handleSelect = (next: Language) => {
-    setLanguage(next)
-    setOpen(false)
-    toggleRef.current?.focus()
-  }
-
   const currentLabel = t(`language.${language}` as TranslationKey)
 
   return (
@@ -101,9 +98,10 @@ export const LanguageSwitcher = () => {
 
             return (
               <li key={code} role='option' aria-selected={isSelected}>
-                <button
-                  type='button'
-                  onClick={() => handleSelect(code)}
+                <Link
+                  href={withLocale(pathname, code)}
+                  hrefLang={code}
+                  onClick={() => setOpen(false)}
                   className={`${ITEM_BASE_CLASSES} ${isSelected ? ITEM_SELECTED_CLASSES : ITEM_IDLE_CLASSES}`}
                 >
                   <span>{code.toUpperCase()}</span>
@@ -114,7 +112,7 @@ export const LanguageSwitcher = () => {
                   >
                     {label}
                   </span>
-                </button>
+                </Link>
               </li>
             )
           })}

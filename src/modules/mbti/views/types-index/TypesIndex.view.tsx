@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
 import { type TranslationKey } from '@/translations/translation.types'
 
@@ -10,6 +11,7 @@ import { MBTI_TYPES } from '../../mbti.types'
 
 export const TypesIndexView = () => {
   const t = useTranslate()
+  const localeHref = useLocaleHref()
 
   return (
     <main className='mx-auto max-w-2xl px-5 pt-6 pb-10'>
@@ -32,7 +34,7 @@ export const TypesIndexView = () => {
             return (
               <li key={code}>
                 <Link
-                  href={`/mbti/types/${code}`}
+                  href={localeHref(`/mbti/types/${code}`)}
                   aria-label={`${code} — ${name}`}
                   className='group flex flex-col items-center gap-2 rounded-[2px] border border-oxide-900 bg-transparent p-3 transition-all duration-200 ease-out hover:border-gold-500 hover:bg-gold-500/5 focus-visible:border-gold-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900'
                 >
@@ -58,7 +60,7 @@ export const TypesIndexView = () => {
 
         <div className='mt-10 flex flex-col gap-3'>
           <Link
-            href='/mbti'
+            href={localeHref('/mbti')}
             className='w-full cursor-pointer rounded-[2px] border border-oxide-800 bg-transparent px-6 py-4 text-center font-display text-[15px] tracking-[0.05em] text-gold-500
                        transition-all duration-200 ease-out
                        hover:border-gold-500 hover:bg-gold-500/5 active:scale-[0.985]
@@ -68,7 +70,7 @@ export const TypesIndexView = () => {
           </Link>
 
           <Link
-            href='/'
+            href={localeHref('/')}
             className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                        transition-colors duration-200 ease-out
                        hover:text-cream-200

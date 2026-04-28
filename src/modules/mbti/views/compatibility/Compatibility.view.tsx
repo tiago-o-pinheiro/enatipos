@@ -3,9 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { LANGUAGE_QUERY_PARAM } from '@/modules/languages/languages.constants'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
-import { useLanguageContext } from '@/modules/languages/stores/language-store'
 import { type TranslationKey } from '@/translations/translation.types'
 
 import { type MbtiType } from '../../mbti.types'
@@ -25,7 +24,7 @@ const SECTIONS: readonly SectionKey[] = [
 
 export const CompatibilityView = ({ a, b }: CompatibilityViewProps) => {
   const t = useTranslate()
-  const { language } = useLanguageContext()
+  const localeHref = useLocaleHref()
   const pair = `${a}-${b}`
 
   const aName = t(`mbti.type.${a}.name` as TranslationKey)
@@ -38,7 +37,7 @@ export const CompatibilityView = ({ a, b }: CompatibilityViewProps) => {
   })
   const allEmpty = sections.every((s) => s.body === null)
 
-  const aHref = `/mbti/types/${a}?${LANGUAGE_QUERY_PARAM}=${language}`
+  const aHref = localeHref(`/mbti/types/${a}`)
 
   return (
     <main className='mx-auto max-w-xl px-5 pt-6 pb-10'>
@@ -109,7 +108,7 @@ export const CompatibilityView = ({ a, b }: CompatibilityViewProps) => {
 
         <div className='mt-10 flex flex-col gap-3'>
           <Link
-            href='/mbti'
+            href={localeHref('/mbti')}
             className='w-full cursor-pointer rounded-[2px] border border-oxide-800 bg-transparent px-6 py-4 text-center font-display text-[15px] tracking-[0.05em] text-gold-500
                        transition-all duration-200 ease-out
                        hover:border-gold-500 hover:bg-gold-500/5 active:scale-[0.985]
@@ -129,7 +128,7 @@ export const CompatibilityView = ({ a, b }: CompatibilityViewProps) => {
           </Link>
 
           <Link
-            href='/'
+            href={localeHref('/')}
             className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-700
                        transition-colors duration-200 ease-out
                        hover:text-cream-200

@@ -1,13 +1,10 @@
 import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
-import {
-  DEFAULT_LANGUAGE,
-  LANGUAGE_QUERY_PARAM,
-} from '@/modules/languages/languages.constants'
 import { type Language } from '@/modules/languages/languages.types'
 import { translate } from '@/modules/languages/services/translator'
 import { isLanguage } from '@/modules/languages/stores/language-store/utils'
+import { withLocale } from '@/modules/languages/utils/locale-path'
 import { type MbtiType } from '@/modules/mbti/mbti.types'
 import {
   COMPAT_PAIRS,
@@ -16,37 +13,28 @@ import {
 } from '@/modules/mbti/mbti.utils'
 import { CompatibilityView } from '@/modules/mbti/views/compatibility'
 
-type Params = { pair: string }
-type SearchParams = Record<string, string | string[] | undefined>
+type Params = { locale: string; pair: string }
 type PageProps = {
   params: Promise<Params>
-  searchParams: Promise<SearchParams>
 }
 
-const resolveLanguage = (sp: SearchParams): Language => {
-  const raw = sp[LANGUAGE_QUERY_PARAM]
-  const value = Array.isArray(raw) ? raw[0] : raw
-  return isLanguage(value) ? value : DEFAULT_LANGUAGE
-}
-
-export const generateStaticParams = (): Params[] =>
+export const generateStaticParams = (): { pair: string }[] =>
   COMPAT_PAIRS.map(([a, b]) => ({ pair: compatPairSlug(a, b) }))
 
 export const generateMetadata = async ({
   params,
-  searchParams,
 }: PageProps): Promise<Metadata> => {
-  const { pair } = await params
+  const { locale, pair } = await params
+  if (!isLanguage(locale)) return {}
   const parsed = parseCompatPair(pair)
   if (!parsed) return {}
   const [a, b] = parsed
 
-  const language = resolveLanguage(await searchParams)
-  const aName = translate(`mbti.type.${a}.name` as never, language)
-  const bName = translate(`mbti.type.${b}.name` as never, language)
+  const aName = translate(`mbti.type.${a}.name` as never, locale)
+  const bName = translate(`mbti.type.${b}.name` as never, locale)
 
-  const title = `${a} × ${b} — ${translate('compatibility.title', language)} · Enatipos`
-  const description = translate('compatibility.metadata.description', language, {
+  const title = `${a} × ${b} — ${translate('compatibility.title', locale)} · Enatipos`
+  const description = translate('compatibility.metadata.description', locale, {
     a,
     b,
     aName,
@@ -61,6 +49,7 @@ export const generateMetadata = async ({
       title,
       description,
       type: 'article',
+      locale,
       images: [{ url: image, width: 1254, height: 1254, alt: `${a} × ${b}` }],
     },
     twitter: {
@@ -73,12 +62,14 @@ export const generateMetadata = async ({
 }
 
 const Page = async ({ params }: PageProps) => {
-  const { pair } = await params
+  const { locale, pair } = await params
   const parsed = parseCompatPair(pair)
   if (!parsed) notFound()
   const [a, b] = parsed as readonly [MbtiType, MbtiType]
   const canonical = compatPairSlug(a, b)
-  if (canonical !== pair) redirect(`/mbti/compatibility/${canonical}`)
+  if (canonical !== pair) {
+    redirect(withLocale(`/mbti/compatibility/${canonical}`, locale as Language))
+  }
   return <CompatibilityView a={a} b={b} />
 }
 

@@ -4,9 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback } from 'react'
 
-import { LANGUAGE_QUERY_PARAM } from '@/modules/languages/languages.constants'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
-import { useLanguageContext } from '@/modules/languages/stores/language-store'
 import { ResultSection } from '@/modules/shared/components/ResultSection'
 import { ShareButton } from '@/modules/shared/components/ShareButton'
 import { useShareCard } from '@/modules/shared/hooks/use-share-card'
@@ -23,7 +22,7 @@ type ResultsScreenProps = {
 
 export const ResultsScreen = ({ result, onRestart }: ResultsScreenProps) => {
   const t = useTranslate()
-  const { language } = useLanguageContext()
+  const localeHref = useLocaleHref()
   const { code, strengths } = result
   const { cardRef, shareAsImage, state: shareState } = useShareCard(
     `enatipos-mbti-${code}.png`,
@@ -37,7 +36,7 @@ export const ResultsScreen = ({ result, onRestart }: ResultsScreenProps) => {
   const gift = t(`mbti.type.${code}.gift` as TranslationKey)
   const keyWork = t(`mbti.type.${code}.key-work` as TranslationKey)
 
-  const wikiPath = `/mbti/types/${code}?${LANGUAGE_QUERY_PARAM}=${language}`
+  const wikiPath = localeHref(`/mbti/types/${code}`)
 
   const handleShare = useCallback(() => {
     const resultText = `${code} — ${name}`
@@ -129,7 +128,7 @@ export const ResultsScreen = ({ result, onRestart }: ResultsScreenProps) => {
         </Link>
 
         <Link
-          href={`/mbti/types?${LANGUAGE_QUERY_PARAM}=${language}`}
+          href={localeHref('/mbti/types')}
           className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                      transition-colors duration-200 ease-out
                      hover:text-cream-200
@@ -151,7 +150,7 @@ export const ResultsScreen = ({ result, onRestart }: ResultsScreenProps) => {
         </button>
 
         <Link
-          href='/'
+          href={localeHref('/')}
           aria-label={t('mbti.results.home.aria-label')}
           className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                      transition-colors duration-200 ease-out

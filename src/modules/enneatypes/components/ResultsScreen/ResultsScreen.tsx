@@ -4,9 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback } from 'react'
 
-import { LANGUAGE_QUERY_PARAM } from '@/modules/languages/languages.constants'
+import { useLocaleHref } from '@/modules/languages/hooks/use-locale-href'
 import { useTranslate } from '@/modules/languages/hooks/use-translate'
-import { useLanguageContext } from '@/modules/languages/stores/language-store'
 import { ResultSection } from '@/modules/shared/components/ResultSection'
 import { ShareButton } from '@/modules/shared/components/ShareButton'
 import { useShareCard } from '@/modules/shared/hooks/use-share-card'
@@ -46,12 +45,12 @@ export const ResultsScreen = ({
   onRestart,
 }: ResultsScreenProps) => {
   const t = useTranslate()
-  const { language } = useLanguageContext()
+  const localeHref = useLocaleHref()
   const { cardRef, shareAsImage, state: shareState } = useShareCard(
     `enatipos-enneagram-${topType}.png`,
   )
 
-  const wikiPath = `/enneagram/types/${topType}?${LANGUAGE_QUERY_PARAM}=${language}`
+  const wikiPath = localeHref(`/enneagram/types/${topType}`)
   const top3 = ranked.slice(0, 3)
   const [adjacentA, adjacentB] = ADJACENTS[topType]
   const otherAdjacent = adjacentA === wing ? adjacentB : adjacentA
@@ -207,7 +206,7 @@ export const ResultsScreen = ({
         </Link>
 
         <Link
-          href={`/enneagram/types?${LANGUAGE_QUERY_PARAM}=${language}`}
+          href={localeHref('/enneagram/types')}
           className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                      transition-colors duration-200 ease-out
                      hover:text-cream-200
@@ -229,7 +228,7 @@ export const ResultsScreen = ({
         </button>
 
         <Link
-          href='/'
+          href={localeHref('/')}
           aria-label={t('results.home.aria-label')}
           className='inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[2px] px-6 py-3 font-display text-[13px] uppercase tracking-[0.2em] text-warm-gray-500
                      transition-colors duration-200 ease-out
