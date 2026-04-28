@@ -1,0 +1,1 @@
+export { EnneagramDiagram } from './EnneagramDiagram'

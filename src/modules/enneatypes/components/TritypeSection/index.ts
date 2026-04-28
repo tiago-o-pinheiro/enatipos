@@ -1,0 +1,1 @@
+export { TritypeSection } from './TritypeSection'
