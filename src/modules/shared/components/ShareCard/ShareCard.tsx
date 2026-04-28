@@ -18,8 +18,7 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
       : {
           position: 'fixed',
           top: 0,
-          left: 0,
-          zIndex: -1,
+          left: -99999,
           pointerEvents: 'none',
         }
 

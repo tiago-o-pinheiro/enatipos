@@ -12,7 +12,12 @@ type UseQuizStage = {
 export const useQuizStage = (): UseQuizStage => {
   const [stage, setStage] = useState<QuizStage>('intro')
 
-  const goToQuiz = useCallback(() => setStage('quiz'), [])
+  const goToQuiz = useCallback(() => {
+    setStage('quiz')
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [])
   const goToResults = useCallback(() => setStage('results'), [])
   const reset = useCallback(() => setStage('intro'), [])
 
