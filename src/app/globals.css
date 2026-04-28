@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  background-color: #070503;
+}
+
 @theme {
   --color-ink-950: #070503;
   --color-ink-900: #0d0a08;
